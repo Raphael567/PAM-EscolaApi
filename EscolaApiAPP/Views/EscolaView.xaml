@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EscolaApiAPP.Views.EscolaView"
+             Title="EscolaView">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Recarregar"
+                     Command="{Binding CarregarEscolasCommand}"
+                     IconImageSource="refresh_icon.png" />
+        <ToolbarItem Text="Adicionar"
+                     Command="{Binding Source={RelativeSource Self}, Path=BindingContext.NavegarParaCadastroCommand}"
+                     IconImageSource="plus_icon.png" />
+    </ContentPage.ToolbarItems>
+
+    <StackLayout Padding="10">
+
+        <ListView x:Name="listViewEscolas"
+                  ItemsSource="{Binding Escolas}"
+                  SelectedItem="{Binding EscolaSelecionada}"
+                  HasUnevenRows="True"
+                  SeparatorVisibility="Default">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" Padding="10" Spacing="2">
+                            <Label Text="{Binding NomeEscola}" FontAttributes="Bold" FontSize="Medium" TextColor="#333333" />
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Código: " FontAttributes="Bold" FontSize="Small" TextColor="#666666"/>
+                                <Label Text="{Binding CodEscola}" FontSize="Small" TextColor="#666666"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="CNPJ: " FontAttributes="Bold" FontSize="Small" TextColor="#666666"/>
+                                <Label Text="{Binding CnpjEscola}" FontSize="Small" TextColor="#666666"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="CEP: " FontAttributes="Bold" FontSize="Small" TextColor="#666666"/>
+                                <Label Text="{Binding CepEscola}" FontSize="Small" TextColor="#666666"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Número: " FontAttributes="Bold" FontSize="Small" TextColor="#666666"/>
+                                <Label Text="{Binding NumEnderecoEscola}" FontSize="Small" TextColor="#666666"/>
+                            </StackLayout>
+                        </StackLayout>
+
+                        <ViewCell.ContextActions>
+                            <MenuItem Text="Editar"
+                                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:EscolaViewModel}}, Path=NavegarParaCadastroComParametroCommand}"
+                                      CommandParameter="{Binding .}"
+                                      BackgroundColor="LightBlue" />
+
+                            <MenuItem Text="Excluir"
+                                      IsDestructive="True"
+                                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:EscolaViewModel}}, Path=DeletarEscolaCommand}"
+                                      CommandParameter="{Binding .}"
+                                      BackgroundColor="Red" />
+                        </ViewCell.ContextActions>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>
