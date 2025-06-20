@@ -1,4 +1,5 @@
 using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
 
 Env.Load();
 
@@ -15,9 +16,14 @@ var connectionString = rawConnection
     .Replace("${DB_USER}", Environment.GetEnvironmentVariable("DB_USER") ?? "")
     .Replace("${DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "");
 
-builder.Services.AddDbContext<SeuDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
 
+builder.Services.AddDbContext<EscolaApi.Data.DataContext>(options =>
+    options.UseSqlServer(connectionString));
+    
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

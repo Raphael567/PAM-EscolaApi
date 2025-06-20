@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EscolaApi", "EscolaApi\EscolaApi.csproj", "{C90F705F-5EE9-2FC9-CE0A-863BF521629D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C90F705F-5EE9-2FC9-CE0A-863BF521629D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C90F705F-5EE9-2FC9-CE0A-863BF521629D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C90F705F-5EE9-2FC9-CE0A-863BF521629D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C90F705F-5EE9-2FC9-CE0A-863BF521629D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B35BE9B0-2AEC-4D91-BAAC-3E3FD0B4CC41}
+	EndGlobalSection
+EndGlobal
