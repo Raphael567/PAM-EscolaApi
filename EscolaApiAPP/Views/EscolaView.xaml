@@ -4,61 +4,82 @@
              x:Class="EscolaApiAPP.Views.EscolaView"
              Title="EscolaView">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Recarregar"
-                     Command="{Binding CarregarEscolasCommand}"
-                     IconImageSource="refresh_icon.png" />
-        <ToolbarItem Text="Adicionar"
-                     Command="{Binding Source={RelativeSource Self}, Path=BindingContext.NavegarParaCadastroCommand}"
-                     IconImageSource="plus_icon.png" />
-    </ContentPage.ToolbarItems>
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="20">
 
-    <StackLayout Padding="10">
+            <!-- Título da lista -->
+            <Label Text="Lista de Escolas Cadastradas" 
+                   FontSize="22" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" />
 
-        <ListView x:Name="listViewEscolas"
-                  ItemsSource="{Binding Escolas}"
-                  SelectedItem="{Binding EscolaSelecionada}"
-                  HasUnevenRows="True"
-                  SeparatorVisibility="Default">
+            <!-- Botão para carregar as escolas -->
+            <Label Text="Clique no botão para carregar as escolas disponíveis:" 
+                   FontAttributes="Italic" 
+                   FontSize="14" 
+                   TextColor="Gray" />
+            
+            <Button Text="Carregar Escolas" 
+                    Command="{Binding CarregarEscolasCommand}" 
+                    HorizontalOptions="Fill" />
 
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Vertical" Padding="10" Spacing="2">
-                            <Label Text="{Binding NomeEscola}" FontAttributes="Bold" FontSize="Medium" TextColor="#333333" />
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="Código: " FontAttributes="Bold" FontSize="Small" TextColor="#666666"/>
-                                <Label Text="{Binding CodEscola}" FontSize="Small" TextColor="#666666"/>
-                            </StackLayout>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="CNPJ: " FontAttributes="Bold" FontSize="Small" TextColor="#666666"/>
-                                <Label Text="{Binding CnpjEscola}" FontSize="Small" TextColor="#666666"/>
-                            </StackLayout>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="CEP: " FontAttributes="Bold" FontSize="Small" TextColor="#666666"/>
-                                <Label Text="{Binding CepEscola}" FontSize="Small" TextColor="#666666"/>
-                            </StackLayout>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="Número: " FontAttributes="Bold" FontSize="Small" TextColor="#666666"/>
-                                <Label Text="{Binding NumEnderecoEscola}" FontSize="Small" TextColor="#666666"/>
-                            </StackLayout>
-                        </StackLayout>
+            <!-- Lista de escolas -->
+            <Frame CornerRadius="8" Padding="10" HasShadow="True">
+                <CollectionView ItemsSource="{Binding Escolas}"
+                      SelectionMode="Single"
+                      SelectedItem="{Binding EscolaSelecionada}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BorderColor="LightGray" Padding="10" Margin="0,0,0,10" CornerRadius="5">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding NomeEscola}" FontSize="18" FontAttributes="Bold" />
+                                    <Label Text="{Binding CodEscola}" FontSize="14" TextColor="Gray" />
+                                    <Label Text="{Binding CnpjEscola}" FontSize="14" TextColor="Gray" />
+                                    <Label Text="{Binding CepEscola}" FontSize="14" TextColor="Gray" />
+                                    <Label Text="{Binding NumEnderecoEscola}" FontSize="14" TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Frame>
 
-                        <ViewCell.ContextActions>
-                            <MenuItem Text="Editar"
-                                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:EscolaViewModel}}, Path=NavegarParaCadastroComParametroCommand}"
-                                      CommandParameter="{Binding .}"
-                                      BackgroundColor="LightBlue" />
+            <!-- Seção de cadastro/edição -->
+            <Frame BorderColor="LightGray" CornerRadius="8" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="12">
 
-                            <MenuItem Text="Excluir"
-                                      IsDestructive="True"
-                                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:EscolaViewModel}}, Path=DeletarEscolaCommand}"
-                                      CommandParameter="{Binding .}"
-                                      BackgroundColor="Red" />
-                        </ViewCell.ContextActions>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </StackLayout>
+                    <Label Text="Cadastrar ou Atualizar Escola" 
+                           FontSize="20" 
+                           FontAttributes="Bold" 
+                           HorizontalOptions="Center" />
+
+                    <Label Text="Preencha os dados abaixo e escolha a ação desejada:" 
+                           FontAttributes="Italic" 
+                           FontSize="14" 
+                           TextColor="Gray" />
+
+                    <Entry Placeholder="Código" Text="{Binding CodEscola}" />
+                    <Entry Placeholder="Nome" Text="{Binding NomeEscola}" />
+                    <Entry Placeholder="CNPJ" Text="{Binding CnpjEscola}" />
+                    <Entry Placeholder="CEP" Text="{Binding CepEscola}" />
+                    <Entry Placeholder="Número do Endereço" Text="{Binding NumEnderecoEscola}" />
+
+                    <Button Text="Cadastrar" Command="{Binding CadastrarEscolaCommand}" WidthRequest="100" />
+                    
+                    <Label Text="Selecione a Escola na lista para poder apagar o deletar! Apenas clique, não tem efeito visual para indicar seleção!" 
+                           FontAttributes="Italic" 
+                           FontSize="14" 
+                           TextColor="Gray" 
+                           Margin="30"/>
+                    
+                    <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
+                        <Button Text="Atualizar Escola" Command="{Binding AtualizarEscolaCommand}" WidthRequest="140" />
+                        <Button Text="Deletar Seleção" Command="{Binding DeletarEscolaCommand}" WidthRequest="140" />
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

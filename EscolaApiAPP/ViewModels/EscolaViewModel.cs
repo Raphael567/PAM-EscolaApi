@@ -16,6 +16,12 @@ namespace EscolaApiAPP.ViewModels
 
         public ObservableCollection<Escola> Escolas { get; set; }
 
+        public string CodEscola { get; set; }
+        public string NomeEscola { get; set; }
+        public string CnpjEscola { get; set; }
+        public string CepEscola { get; set; }
+        public string NumEnderecoEscola { get; set; }
+
         private Escola _escolaSelecionada;
         public Escola EscolaSelecionada
         {
@@ -24,9 +30,17 @@ namespace EscolaApiAPP.ViewModels
             {
                 if (SetProperty(ref _escolaSelecionada, value) && value != null)
                 {
-                    Shell.Current.GoToAsync($"cadastroEscolaView?codEscola={value.CodEscola}");
+                    CodEscola = value.CodEscola;
+                    NomeEscola = value.NomeEscola;
+                    CnpjEscola = value.CnpjEscola;
+                    CepEscola = value.CepEscola;
+                    NumEnderecoEscola = value.NumEnderecoEscola;
 
-                    EscolaSelecionada = null;
+                    OnPropertyChanged(nameof(CodEscola));
+                    OnPropertyChanged(nameof(NomeEscola));
+                    OnPropertyChanged(nameof(CnpjEscola));
+                    OnPropertyChanged(nameof(CepEscola));
+                    OnPropertyChanged(nameof(NumEnderecoEscola));
                 }
             }
         }
@@ -42,9 +56,9 @@ namespace EscolaApiAPP.ViewModels
             Escolas = new ObservableCollection<Escola>();
 
             CarregarEscolasCommand = new Command(async () => await CarregarEscolas());
-            CadastrarEscolaCommand = new Command<Escola>(async (escola) => await CadastrarEscola(escola));
-            AtualizarEscolaCommand = new Command<Escola>(async (escola) => await AtualizarEscola(escola));
-            DeletarEscolaCommand = new Command<Escola>(async (escola) => await DeletarEscola(escola));
+            CadastrarEscolaCommand = new Command<Escola>(async (escola) => await CadastrarEscola());
+            AtualizarEscolaCommand = new Command<Escola>(async (escola) => await AtualizarEscola());
+            DeletarEscolaCommand = new Command<Escola>(async (escola) => await DeletarEscola());
         }
 
         public async Task CarregarEscolas()
@@ -62,17 +76,24 @@ namespace EscolaApiAPP.ViewModels
             }
         }
 
-        public async Task CadastrarEscola(Escola escola)
+        public async Task CadastrarEscola()
         {
             try
             {
+                var escola = new Escola
+                {
+                    CodEscola = CodEscola,
+                    NomeEscola = NomeEscola,
+                    CnpjEscola = CnpjEscola,
+                    CepEscola = CepEscola,
+                    NumEnderecoEscola = NumEnderecoEscola
+                };
+                
                 if (await _escolaService.CadastrarAsync(escola))
                 {
-                    Escolas.Add(escola);
-                    await App.Current.MainPage.DisplayAlert("Sucesso", "Escola cadastrada!", "OK");
+                    await CarregarEscolas();
+                    await App.Current.MainPage.DisplayAlert("Sucesso", "Escola cadastrada com sucesso", "OK");
                 }
-                else
-                    await App.Current.MainPage.DisplayAlert("Erro", "Falha ao cadastrar escola.", "OK");
             }
             catch (Exception ex)
             {
@@ -80,17 +101,24 @@ namespace EscolaApiAPP.ViewModels
             }
         }
 
-        public async Task AtualizarEscola(Escola escola)
+        public async Task AtualizarEscola()
         {
             try
             {
-                if (await _escolaService.AtualizarAsync(escola))
+                var escola = new Escola
                 {
-                    await App.Current.MainPage.DisplayAlert("Sucesso", "Escola atualizada!", "OK");
-                    await CarregarEscolas();
-                }
-                else
-                    await App.Current.MainPage.DisplayAlert("Erro", "Falha ao atualizar escola.", "OK");
+                    CodEscola = CodEscola,
+                    NomeEscola = NomeEscola,
+                    CnpjEscola = CnpjEscola,
+                    CepEscola = CepEscola,
+                    NumEnderecoEscola = NumEnderecoEscola
+                };
+
+                await _escolaService.AtualizarAsync(escola);
+
+                await CarregarEscolas();
+                await App.Current.MainPage.DisplayAlert("Sucesso", "Escola atualizada!", "OK");
+                EscolaSelecionada = null;
             }
             catch (Exception ex)
             {
@@ -98,20 +126,20 @@ namespace EscolaApiAPP.ViewModels
             }
         }
 
-        public async Task DeletarEscola(Escola escola)
+        public async Task DeletarEscola()
         {
             try
             {
-                bool confirm = await App.Current.MainPage.DisplayAlert("Confirmação", $"Deseja deletar {escola.NomeEscola}?", "Sim", "Não");
-                if (!confirm) return;
-
-                if (await _escolaService.DeletarAsync(escola.CodEscola))
+                if (EscolaSelecionada != null)
                 {
-                    Escolas.Remove(escola);
-                    await App.Current.MainPage.DisplayAlert("Sucesso", "Escola deletada!", "OK");
+                    await _escolaService.DeletarAsync(EscolaSelecionada.CodEscola);
+                    await CarregarEscolas();
+                    await App.Current.MainPage.DisplayAlert("Sucesso ao deletar escola", "Escola Deletada!", "OK");
                 }
                 else
-                    await App.Current.MainPage.DisplayAlert("Erro", "Falha ao deletar escola.", "OK");
+                    await App.Current.MainPage.DisplayAlert("Aviso", "Selecione uma escola primeiro.", "OK");
+
+                EscolaSelecionada = null;
             }
             catch (Exception ex)
             {
